@@ -1,0 +1,12 @@
+--3DreamEngine material properties file
+return {
+	{
+		name = "Monkey",
+		tex_albedo = "textures/bricks_albedo",
+		tex_ao = "textures/bricks_ao",
+		tex_normal = "textures/bricks_normal",
+		tex_roughness = "textures/bricks_roughness",
+		tex_emission = "textures/bricks_roughness",
+		alpha = 1,
+	},
+}
