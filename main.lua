@@ -2,12 +2,6 @@
 ffi = require "ffi"
 new = ffi.new
 
-slash = ''
-if jit.os == "Windows" then
-    slash = '\\'
-else
-    slash = '/'
-end
 
 layers = {}
 current_layer = new("int[1]",0)
@@ -23,7 +17,6 @@ imgui = require "imgui.love"
 class = require 'middleclass'
 classes = require 'classes'
 faicons = require 'fonts.fAwesome5'
-magick = require("magick.wand")
 render_texs = {
 	albedo = nil,
 	RMA = nil,
@@ -148,7 +141,7 @@ function love.mousemoved(x, y, dx, dy)
 end
 
 function love.wheelmoved(x, y)
-	camZoom = camZoom + y
+	camZoom = camZoom + y*0.8
 end
 
 function love.update(dt)

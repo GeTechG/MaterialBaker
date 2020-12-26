@@ -275,7 +275,7 @@ function saveMaterial()
   if select_export ~= 3 then
     imgui.Text("Example: prefix_albedo.png")
   else
-    imgui.Text("Example: prefix_D.dds")
+    imgui.Text("Example: prefix_D.png")
   end
   imgui.InputText("Prefix", prefix, 128)
   if imgui.BeginCombo("Format", formats[select_format]) then
@@ -307,22 +307,22 @@ function saveMaterial()
       ao = "ao";
       emiss = "emission";
     end
-    if select_format ~= 1 then
+    if select_format ~= 5 then
       if render_texs.albedo then
-        local file = io.open(ffi.string(prefix).."_"..albedo.."."..formats[select_format], "w")
+        local file = io.open(ffi.string(prefix).."_"..albedo.."."..formats[select_format], "wb")
         file:write(render_texs.albedo:newImageData():encode(formats[select_format]):getString())
         file:close()
       end
 
       if select_export ~= 3 then
         if render_texs.normal_data then
-          local file = io.open(ffi.string(prefix).."_"..normal.."."..formats[select_format], "w")
+          local file = io.open(ffi.string(prefix).."_"..normal.."."..formats[select_format], "wb")
           file:write(render_texs.normal_data:encode(formats[select_format]):getString())
           file:close()
         end
 
         if render_texs.emission then
-          local file = io.open(ffi.string(prefix).."_"..emiss.."."..formats[select_format], "w")
+          local file = io.open(ffi.string(prefix).."_"..emiss.."."..formats[select_format], "wb")
           file:write(render_texs.emission:newImageData():encode(formats[select_format]):getString())
           file:close()
         end
@@ -333,7 +333,7 @@ function saveMaterial()
               r,g,b = b,r,g
               return r, g, b, a
             end)
-            local file = io.open(ffi.string(prefix).."_"..RMA.."."..formats[select_format], "w")
+            local file = io.open(ffi.string(prefix).."_"..RMA.."."..formats[select_format], "wb")
             file:write(rma:encode(formats[select_format]):getString())
             file:close()
           else
@@ -353,15 +353,15 @@ function saveMaterial()
               r,g,b = b,b,b
               return r, g, b, a
             end)
-            local file = io.open(ffi.string(prefix).."_"..rough.."."..formats[select_format], "w")
+            local file = io.open(ffi.string(prefix).."_"..rough.."."..formats[select_format], "wb")
             file:write(roughd:encode(formats[select_format]):getString())
             file:close()
 
-            local file = io.open(ffi.string(prefix).."_"..metal.."."..formats[select_format], "w")
+            local file = io.open(ffi.string(prefix).."_"..metal.."."..formats[select_format], "wb")
             file:write(metd:encode(formats[select_format]):getString())
             file:close()
 
-            local file = io.open(ffi.string(prefix).."_"..ao.."."..formats[select_format], "w")
+            local file = io.open(ffi.string(prefix).."_"..ao.."."..formats[select_format], "wb")
             file:write(aod:encode(formats[select_format]):getString())
             file:close()
           end
@@ -386,7 +386,7 @@ function saveMaterial()
           a = (r1+g1+b1)/3
           return r, g, b, a
         end)
-        local file = io.open(ffi.string(prefix).."_"..normal.."."..formats[select_format], "w")
+        local file = io.open(ffi.string(prefix).."_"..normal.."."..formats[select_format], "wb")
         file:write(nm:encode("png"):getString())
         file:close()
 
@@ -396,7 +396,7 @@ function saveMaterial()
             a,r,g,b = 1-g,r,b,0
             return r, g, b, a
           end)
-          local file = io.open(ffi.string(prefix).."_"..RMA.."."..formats[select_format], "w")
+          local file = io.open(ffi.string(prefix).."_"..RMA.."."..formats[select_format], "wb")
           file:write(rma:encode("png"):getString())
           file:close()
         end
@@ -416,13 +416,7 @@ function draw_dropfile()
     function love.filedropped(file)
       local dt;
       --print(magick.load_image(file:getFilename()))
-      if string.sub(file:getFilename(),-3) ~= "png" then
-        local img = magick.load_image_from_blob(file:read())
-        img:set_format("tga")
-        dt = img:get_blob()
-      else
-        dt = file:read()
-      end
+      dt = file:read()
       local data = love.filesystem.newFileData(dt, file:getFilename())
       gui.current_image_data[0] = resizeImageData(love.image.newImageData(data),dimen_texture[0],dimen_texture[1])
       dream:update_texture(gui.current_image_texture)
